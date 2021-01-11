@@ -5,9 +5,9 @@ import App from './App';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import rootReducer from './store'
+// import 'bootstrap/dist/css/bootstrap.min.css';
 
 const store = createStore(rootReducer)
-
 
 ReactDOM.render(
   <React.StrictMode>

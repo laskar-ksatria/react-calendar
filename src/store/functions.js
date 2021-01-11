@@ -1,14 +1,14 @@
 import moment from 'moment'
-import { SET_CALENDAR } from './type'
-
+import { SET_CALENDAR, SET_MONTH } from './type'
 
 export const F_GET_CALENDAR = (dispatch) => {
-    return new Promise((res, rej) => {
 
+    return new Promise((res, rej) => {
         //FIND FOR THE DATES OF THE CURRENT MONTH --------------------------
         const date = new Date()
         const current_date = date.getDate()
         const month = date.getMonth()
+        
         let allDates = []
         for (let i = 1; i <= 31; i++) {
             let countDay;
@@ -62,11 +62,11 @@ export const F_GET_CALENDAR = (dispatch) => {
                     allDates.push(new Date(newDate))
             }
         }
-        console.log(allDates)
         //DISPATCHING TO REDUX -----------------------
         dispatch({type: SET_CALENDAR, data: allDates})
         res()
     })
+    
 }
 
 export const F_FILTER_DATE = (data, dayName) => {

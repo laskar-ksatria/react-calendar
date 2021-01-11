@@ -20,11 +20,7 @@ function Calendar() {
             </div>
             <div className="border border-dark date-container">
                 {calendars ? calendars.map((item, index) => {
-                    return (
-                        <div key={index} className="bg-info p-0 date-list border">
-                            1
-                        </div>
-                    )
+                    return <Date key={index} date={item} />
                 }) : ""}
             </div>
         </div>

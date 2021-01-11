@@ -1,12 +1,13 @@
-import react from 'react';
-import ReactLoading from 'react-loading';
+import React from 'react';
+import ReactLoading from "react-loading";
 
-function Loading() {
+
+function LoadingDashboard() {
     return (
-        <div className="" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '100vh'}}>
-            <h1>Loading</h1>
+        <div className="bg-dark" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100%'}}>
+            <ReactLoading  type="spokes" color="gold" />
         </div>
     )
-}
+};
 
-export default Loading;
+export default LoadingDashboard;

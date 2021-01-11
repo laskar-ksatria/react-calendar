@@ -1,14 +1,16 @@
-import { SET_CALENDAR, SET_EDIT_EVENT, SET_EVENT, SET_MONTH_NAME } from './type'
+import { SET_CALENDAR, SET_MONTH, SET_EVENTS } from './type'
 
 //Export all functions
 export * from './functions'
 //Export default data
 export * from './defaultData'
+//Export all types
+export * from './type'
 
 const initialState = {
-    month_name: null,
-    day_names: null,
+    month: null,
     calendars: null,
+    events: null,
 }
 
 const reducer = (state = initialState, action) => {
@@ -16,8 +18,10 @@ const reducer = (state = initialState, action) => {
     switch(type) {
         case SET_CALENDAR:
             return {...state, calendars: data};
-        case SET_MONTH_NAME:
-            return {...state, month_name: data};
+        case SET_MONTH:
+            return {...state, month: data};
+        case SET_EVENTS:
+            return {...state, events: data}
         default:
             return state;
     }

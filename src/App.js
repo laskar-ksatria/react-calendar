@@ -1,6 +1,6 @@
 import React from 'react'
 import Calendar from './views/Calendar'
-import { F_GET_CALENDAR } from './store'
+import { F_GET_CALENDAR, SET_EVENTS } from './store'
 import { useDispatch } from 'react-redux'
 import Loading from './views/Loading'
 
@@ -13,12 +13,18 @@ const App = () => {
   const getCalendar = () => {
     setTimeout(() => {
       F_GET_CALENDAR(dispatch)
-        .then(() => setLoading(false))
-    }, 2000);
+        .then(() => {
+          let currentEvents = localStorage.getItem('calendar_current_event')
+          if (currentEvents) {
+            dispatch({type: SET_EVENTS, data: currentEvents})
+          }
+          setLoading(false)
+        })
+    }, 1000);
   }
 
   //useEffect
-  React.useEffect(getCalendar, [])
+  React.useEffect(getCalendar, [dispatch])
 
   return (
     <>
