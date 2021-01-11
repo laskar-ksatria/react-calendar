@@ -1,0 +1,2 @@
+export const SET_CALENDAR = 'SET_CALENDAR';
+export const SET_MONTH_NAME = 'SET_MONTH_NAME'
