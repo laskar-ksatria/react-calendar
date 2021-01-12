@@ -3,7 +3,6 @@ import { Form } from 'react-bootstrap'
 import { F_SET_NEW_EVENT, F_DELETE_EVENT } from '../store'
 import { useDispatch } from 'react-redux'
 
-
 function EventForm({ handleChange, deleteEvent, event, date }) {
 
     //Define dispatch
@@ -14,6 +13,10 @@ function EventForm({ handleChange, deleteEvent, event, date }) {
         setState({...state, [e.target.name]: e.target.value})
         handleChange(event.id, e)
     }
+
+    React.useEffect(() => {
+        setState(event)
+    }, [event])
 
     const handleSave = () => {
         let newEvent = {date, event: state}

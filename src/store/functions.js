@@ -65,8 +65,6 @@ export const F_GET_CALENDAR = (dispatch) => {
         }
         //DISPATCHING TO REDUX -----------------------
         let monthSet = moment(date).format("LL").split(" ")[0]
-        console.log(monthSet)
-        
         dispatch({type: SET_MONTH, data: monthSet})
         dispatch({type: SET_CALENDAR, data: allDates})
         res()
@@ -127,13 +125,12 @@ export const F_DELETE_EVENT = (dispatch, id, cb) => {
             localStorage.removeItem('calendar_current_event')
             dispatch({type: SET_EVENTS, data: null})
             cogoToast.success("Event has been deleted")
-            cb()
         }else {
             localStorage.setItem('calendar_current_event', JSON.stringify(newEvents))
             dispatch({type: SET_EVENTS, data: newEvents})
             cogoToast.success("Event has been deleted")
-            cb()
         }
+        cb()
     }else {
         cb()
     }
