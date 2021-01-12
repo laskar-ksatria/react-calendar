@@ -3,13 +3,12 @@ import Moment from 'moment'
 import randomColor from 'randomcolor'
 import { useSelector } from 'react-redux'
 import ModalForm from './ModalForm'
-import { Button, Modal } from 'react-bootstrap'
-import { initialEventData } from '../store'
 
 function Date({ date }) {
 
     //Define global var
-    const { events } = useSelector(state => state)
+    const events = useSelector(state => state.events)
+    const month = useSelector(state => state.month)
 
     //Modal functions
     const [show, setShow] = React.useState(false);
@@ -19,34 +18,55 @@ function Date({ date }) {
     //EventData
     const [eventData, setEventData] = React.useState(null)
 
-    const setEvents = () => {
-        if (events) {
-            let myEvents = []
-        }else {
-            setEventData(initialEventData)
+    const [isInMonth, setIsInMont] = React.useState(true);
+
+    const checkInMonth = () => {
+        let myMonth = Moment(date).format("LL").split(" ")[0]
+        if (myMonth !== month) {
+            setIsInMont(false)
         }
     }
 
-    React.useEffect(setEvents, [events])
+    const setEvents = () => {
+        if (events) {
+            let newEvents = []
+            events.forEach(item => {
+                if (Moment(item.date).format("L") === Moment(date).format("L")) {
+                    newEvents.push(item.event)
+                }
+            })
+            if (newEvents.length > 0) {
+                setEventData(newEvents)
+            }
+        }else {
+            setEventData(null)
+        }
+    }
+
+    React.useEffect(checkInMonth, [date, month])
+    React.useEffect(setEvents, [events, date])
 
     return (
         <>
-            <div onClick={handleShow} className="bg-light p-0 date-list border border-dark" style={{position: 'relative', display: 'flex', flexDirection: 'column'}} data-toggle="modal" data-target={`#${Moment(date).format('LL')}`}>
-                <span style={{position: 'absolute', top: 0, right: '5px', fontWeight: 'bold', fontSize: '20px'}}>
+            <div onClick={handleShow} className={`bg-light p-0 date-list ${isInMonth ? "in-month-date" : "out-month-date"}`} style={{position: 'relative', display: 'flex', flexDirection: 'column'}}>
+                <span className={isInMonth ? 'in-month' : 'out-month'}>
                     {Moment(date).format('l').split('/')[1]}
                 </span>
-                {/* <div style={{fontSize: '11px', fontWeight: 'bold',flex: 1, backgroundColor: randomColor()}}>
-                    <p style={{margin: "auto", width: '100%'}}>Home Theater</p>
-                    <p style={{margin: "auto", width: '100%'}}>12:00AM</p>
-                </div>
-                <div style={{fontSize: '11px', fontWeight: 'bold',flex: 1, backgroundColor: randomColor()}}>
-                    <p style={{margin: "auto", width: '100%'}}>Home Theater</p>
-                    <p style={{margin: "auto", width: '100%'}}>12:00AM</p>
-                </div> */}
+                {eventData ? 
+                    eventData.map((item, index) => {
+                        return (
+                            <div key={index} style={{fontSize: '10px', fontWeight: 'bold',flex: 1, backgroundColor: randomColor()}}>
+                                <p style={{margin: "auto", width: '100%'}}>{item.event_name} || {item.time}</p>
+                                <p style={{margin: "auto", width: '100%'}}>{item.invites_email}</p>
+                            </div>
+                        )
+                    })
+                
+                : ""}
             </div>
             
             {/* MODAL FORM EVENT ------ */}
-            <ModalForm 
+            <ModalForm
                 show={show} 
                 handleClose={handleClose} 
                 date={date}
@@ -57,16 +77,3 @@ function Date({ date }) {
 }
 
 export default Date;
-
-{/* <div className="bg-light p-0 date-list border border-dark" style={{position: 'relative', display: 'flex', flexDirection: 'column'}}>
-<span style={{position: 'absolute', top: 0, right: '5px', fontWeight: 'bold'}}>
-    {Moment(item).format('l').split('/')[1]}
-</span>
-<div style={{fontSize: '11px', flex: 1, backgroundColor: randomColor()}}>
-    <p style={{margin: "auto", width: '100%'}}>Home Theater</p>
-    <p style={{margin: "auto", width: '100%'}}>12:00AM</p>
-</div>
-<div style={{fontSize: '12px', flex: 1, backgroundColor: randomColor()}}>
-    2. Music Theater
-</div>
-</div> */}

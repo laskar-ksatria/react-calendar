@@ -1,5 +1,6 @@
+import cogoToast from 'cogo-toast'
 import moment from 'moment'
-import { SET_CALENDAR, SET_MONTH } from './type'
+import { SET_CALENDAR, SET_MONTH, SET_EVENTS } from './type'
 
 export const F_GET_CALENDAR = (dispatch) => {
 
@@ -23,7 +24,7 @@ export const F_GET_CALENDAR = (dispatch) => {
                 diffDate = new Date().setDate(date.getDate() + countDay)
             }
             if (new Date(diffDate).getMonth() === month) {
-                allDates.push(new Date(diffDate))
+                allDates.push(diffDate)
             }
         }
 
@@ -38,7 +39,7 @@ export const F_GET_CALENDAR = (dispatch) => {
                     let oldDate = new Date(minDay)
                     let newDate = new Date().setDate(oldDate.getDate() - i)
                     // oldDate.setDate(oldDate.getDate() - i)
-                    allDates.unshift(new Date(newDate))
+                    allDates.unshift(newDate)
                     if (moment(oldDate).format === 'Monday') {
                         break
                     }else {
@@ -51,7 +52,7 @@ export const F_GET_CALENDAR = (dispatch) => {
                     let oldDate = new Date(maxDay)
                     let newDate = new Date().setDate(oldDate.getDate() + i)
                     // oldDate.setDate(oldDate.getDate() + i)
-                    allDates.push(new Date(newDate))
+                    allDates.push(newDate)
                 }
             }
         }else {
@@ -59,10 +60,14 @@ export const F_GET_CALENDAR = (dispatch) => {
                     let oldDate = new Date(maxDay)
                     let newDate = new Date().setDate(oldDate.getDate() + i)
                     // oldDate.setDate(oldDate.getDate() + i)
-                    allDates.push(new Date(newDate))
+                    allDates.push(newDate)
             }
         }
         //DISPATCHING TO REDUX -----------------------
+        let monthSet = moment(date).format("LL").split(" ")[0]
+        console.log(monthSet)
+        
+        dispatch({type: SET_MONTH, data: monthSet})
         dispatch({type: SET_CALENDAR, data: allDates})
         res()
     })
@@ -78,3 +83,60 @@ export const F_FILTER_DATE = (data, dayName) => {
         res(filtering)
     })
 }
+
+
+export const F_SET_NEW_EVENT = (dispatch, data) => {
+    let allEvents = localStorage.getItem('calendar_current_event')
+    if (allEvents) {
+        let find = false;
+        let parseAllEvents = JSON.parse(allEvents)
+        let newAllEvents = []
+        parseAllEvents.forEach(item => {
+            if (moment(item.date).format("L") === moment(data.date).format("L")) {
+                if (item.event.id === data.event.id) {
+                    newAllEvents.push(data)
+                    find = true
+                }else {
+                    newAllEvents.push(item)
+                }
+            }else {
+                newAllEvents.push(item)
+            }
+        })
+        if (find) {
+            localStorage.setItem('calendar_current_event', JSON.stringify(newAllEvents))
+            dispatch({type: SET_EVENTS, data: newAllEvents})
+        }else {
+            parseAllEvents.push(data)
+            localStorage.setItem('calendar_current_event', JSON.stringify(parseAllEvents))
+            dispatch({type: SET_EVENTS, data: parseAllEvents})
+        }
+    }else {
+        localStorage.setItem('calendar_current_event', JSON.stringify([data]))
+        dispatch({type: SET_EVENTS, data: [data]})
+    }
+    cogoToast.success("Event already save")
+}
+
+export const F_DELETE_EVENT = (dispatch, id, cb) => {
+    let allEvents = localStorage.getItem('calendar_current_event')
+    if (allEvents) {
+        let parseEvents = JSON.parse(allEvents)
+        let newEvents = parseEvents.filter(item => item.event.id !== id)
+        if (newEvents.length === 0) {
+            localStorage.removeItem('calendar_current_event')
+            dispatch({type: SET_EVENTS, data: null})
+            cogoToast.success("Event has been deleted")
+            cb()
+        }else {
+            localStorage.setItem('calendar_current_event', JSON.stringify(newEvents))
+            dispatch({type: SET_EVENTS, data: newEvents})
+            cogoToast.success("Event has been deleted")
+            cb()
+        }
+    }else {
+        cb()
+    }
+    
+}
+

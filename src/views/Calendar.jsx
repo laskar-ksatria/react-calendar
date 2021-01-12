@@ -10,7 +10,7 @@ function Calendar() {
     const { calendars } = useSelector(state => state)
 
     return (
-        <div className="container pt-5">
+        <div className="container pt-3" style={{width: '98%'}}>
             <div className="row">
                 {initialDays.map((name, index) => {
                     return (

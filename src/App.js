@@ -16,7 +16,8 @@ const App = () => {
         .then(() => {
           let currentEvents = localStorage.getItem('calendar_current_event')
           if (currentEvents) {
-            dispatch({type: SET_EVENTS, data: currentEvents})
+            
+            dispatch({type: SET_EVENTS, data: JSON.parse(currentEvents)})
           }
           setLoading(false)
         })

@@ -5,12 +5,16 @@ import cogoToast from 'cogo-toast'
 import EventForm from './EventForm'
 import uuid from 'react-uuid'
 
-function ModalForm({ show, handleClose, date, eventData }) {
+function ModalForm({ show, handleClose, date, eventData, }) {
 
     const [state, setState] = React.useState(null)
 
     const checkEvent = () => {
-        setState(eventData)
+        if (eventData) {
+            setState(eventData)
+        }else {
+            setState([{id: uuid(), event_name: "", time: "", invites_email: ""}])
+        }
     };
 
     const handleChange = (id, e) => {
@@ -20,12 +24,11 @@ function ModalForm({ show, handleClose, date, eventData }) {
                 item[e.target.name] = e.target.value
             }
         })
-        setState(newState);
-    }
+    };
 
     const addForm = () => {
         if (state.length === 3) {
-            return cogoToast.error('Cannot add more then 3 events')
+            return cogoToast.error('Cannot add more then 3 events', {position: 'top-left'})
         }else {
             let newId = uuid()
             setState([...state, {id: newId, event_name: "", time: "", invites_email: ""}])
@@ -49,21 +52,23 @@ function ModalForm({ show, handleClose, date, eventData }) {
         } 
     };
 
-    const handleSubmit = (data) => {
-        
-    }
-
     React.useEffect(checkEvent, [eventData])
 
     return (
         <>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                <h6 className="text-center">Add event at {Moment(date).format('ll')}?</h6>
+                    <h6 className="text-center">Add event at {Moment(date).format('ll')}?</h6>
                 </Modal.Header>
                 <Modal.Body>
                     {state ? state.map((item, index) => {
-                        return <EventForm deleteEvent={deleteEvent} key={index} handleChange={handleChange} event={item} events={state} />
+                        return <EventForm 
+                                    key={index} 
+                                    deleteEvent={deleteEvent} 
+                                    handleChange={handleChange} 
+                                    event={item} 
+                                    date={date}
+                                />
                     }) : ""}
                 
                 <div className="mt-2 border-top pt-3 d-flex justify-content-between">
