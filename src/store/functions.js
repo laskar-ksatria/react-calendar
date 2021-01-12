@@ -120,7 +120,14 @@ export const F_DELETE_EVENT = (dispatch, id, cb) => {
     let allEvents = localStorage.getItem('calendar_current_event')
     if (allEvents) {
         let parseEvents = JSON.parse(allEvents)
-        let newEvents = parseEvents.filter(item => item.event.id !== id)
+        let newEvents = []
+        parseEvents.forEach(item => {
+            let { event } = item
+            if (item.event.id !== id) {
+                newEvents.push(item)
+            }
+        })
+        console.log(newEvents)
         if (newEvents.length === 0) {
             localStorage.removeItem('calendar_current_event')
             dispatch({type: SET_EVENTS, data: null})

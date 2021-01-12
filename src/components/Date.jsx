@@ -37,6 +37,8 @@ function Date({ date }) {
             })
             if (newEvents.length > 0) {
                 setEventData(newEvents)
+            }else {
+                setEventData(null)
             }
         }else {
             setEventData(null)
@@ -52,7 +54,7 @@ function Date({ date }) {
                 <span className={isInMonth ? 'in-month' : 'out-month'}>
                     {Moment(date).format('l').split('/')[1]}
                 </span>
-                {eventData ? 
+                {eventData && eventData.length > 0 ? 
                     eventData.map((item, index) => {
                         return (
                             <div key={index} style={{fontSize: '10px', fontWeight: 'bold',flex: 1, backgroundColor: randomColor()}}>
