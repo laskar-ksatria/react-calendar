@@ -32,7 +32,7 @@ export const F_GET_CALENDAR = (dispatch) => {
         let excessDay = 35 - allDates.length;
         let count = excessDay;
         let minDay = allDates[0]
-        let maxDay = allDates[1]
+        let maxDay = allDates[allDates.length - 1]
         if (moment(minDay).format('dddd') !== 'Monday') {
             for (let i = 1; i <= excessDay; i++) {
                 if (count !== 0) {
@@ -127,7 +127,7 @@ export const F_DELETE_EVENT = (dispatch, id, cb) => {
                 newEvents.push(item)
             }
         })
-        console.log(newEvents)
+
         if (newEvents.length === 0) {
             localStorage.removeItem('calendar_current_event')
             dispatch({type: SET_EVENTS, data: null})

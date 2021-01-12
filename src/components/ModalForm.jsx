@@ -28,7 +28,7 @@ function ModalForm({ show, handleClose, date, eventData, }) {
 
     const addForm = () => {
         if (state.length === 3) {
-            return cogoToast.error('Cannot add more then 3 events', {position: 'top-left'})
+            return cogoToast.error('Cannot add more then 3 events')
         }else {
             let newId = uuid()
             setState([...state, {id: newId, event_name: "", time: "", invites_email: ""}])
